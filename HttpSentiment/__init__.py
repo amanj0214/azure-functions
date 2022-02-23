@@ -8,7 +8,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
     custom_text = req.params.get('custom_text')
-    
     if not custom_text:
         try:
             req_body = req.get_json()
@@ -17,15 +16,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         else:
             custom_text = req_body.get('custom_text')
 
-    logging.info(custom_text)
-
     if custom_text:
-        
-        clean_text = custom_functions.clean_text(custom_text)
-        return func.HttpResponse(f"{clean_text}")
-        
+        # Call sentiment function
+        text_features = custom_functions.get_text_features(custom_text)
+        return func.HttpResponse(f"{text_features}")
     else:
         return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a custom_text in the query string or in the request body for a personalized response.",
+             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
              status_code=200
         )
